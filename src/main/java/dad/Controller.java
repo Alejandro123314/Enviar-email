@@ -95,18 +95,18 @@ public class Controller implements Initializable {
 		Alert alerta = new Alert(null);
 		try {
 			Email email = new SimpleEmail();
-			email.setHostName("smtp.googlemail.com");
-			email.setSmtpPort(465);
+			email.setHostName(model.getServidor());
+			email.setSmtpPort(model.getPuerto());
 			email.setAuthenticator(new DefaultAuthenticator(model.getRemitente(), model.getContrasenia()));
-			email.setSSLOnConnect(true);
-			email.setFrom("user@gmail.com");
-			email.setSubject("TestMail");
-			email.setMsg("This is a test mail ... :-)");
-			email.addTo("foo@bar.com");
+			email.setSSLOnConnect(model.isSsl());
+			email.setFrom(model.getRemitente());
+			email.setSubject(model.getAsunto());
+			email.setMsg(model.getMensaje());		
+			email.addTo(model.getDestinatario());
 			email.send();
 			alerta.setTitle("Mensaje enviado");
 			alerta.setAlertType(AlertType.INFORMATION);
-			alerta.setHeaderText("Mensaje enviado con exito a '"+ model.getRemitente()+ "'.");
+			alerta.setHeaderText("Mensaje enviado con exito a '"+ model.getDestinatario()+ "'.");
 			alerta.setContentText("");
 			
 		} catch (Exception error) {
@@ -115,6 +115,7 @@ public class Controller implements Initializable {
 			alerta.setHeaderText("No se pudo enviar el email");
 			alerta.setContentText("Invalid message suplied");
 		}
+		alerta.showAndWait();
 	}
 
 	private void limpiar(ActionEvent e) {
